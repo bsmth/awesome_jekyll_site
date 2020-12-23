@@ -1,0 +1,38 @@
+name: Check HTML in PRs
+
+on:
+  pull_request:
+    branches: [ main ]
+  # Allows the workflow to be run from the Actions tab manually
+  workflow_dispatch:
+
+jobs:
+  jekyll:
+    runs-on: ubuntu-16.04
+    steps:
+      - name: 🛎 Check out master
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
+
+      - name: 🚀 Cache deps
+        uses: actions/cache@v2
+        with:
+          path: vendor/bundle
+          key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-gems-
+
+      - name: 🔨 Build site
+        uses:  lemonarc/jekyll-action@1.0.0
+
+      - name: 📉 Test HTML
+        uses: chabad360/htmlproofer@master
+        with:
+          directory: "./_site"
+          arguments: > 
+            --assume-extension 
+            --url-ignore "/example.com/" 
+            --enforce_https 
+            --check-html 
+            --check_opengraph
