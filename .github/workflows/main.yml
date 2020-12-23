@@ -32,7 +32,7 @@ jobs:
           directory: "./_site"
           arguments: > 
             --assume-extension 
-            --url-ignore "/example.com/" 
+            --url-ignore "/example.com|twitter.com/" 
             --enforce_https 
             --check-html 
             --check_opengraph
